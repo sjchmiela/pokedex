@@ -1,0 +1,4 @@
+node_modules
+deps
+_build
+priv/static
