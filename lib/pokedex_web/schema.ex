@@ -44,15 +44,14 @@ defmodule PokedexWeb.Schema do
     import_fields(:traninership_subscriptions)
   end
 
-  def plugins do
-    [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
-  end
+  # STEP 3 
+  # Add Absinthe.Middleware.Dataloader plugin to the list of used plugins.
+  # https://hexdocs.pm/absinthe/ecto.html#dataloader
 
-  def context(ctx) do
-    loader =
-      Dataloader.new()
-      |> Dataloader.add_source(:repo, Dataloader.Ecto.new(Pokedex.Repo))
-
-    Map.put(ctx, :loader, loader)
-  end
+  # STEP 4
+  # Add Dataloader to resolution context. 
+  # We recommend using Dataloader.Ecto with Pokedex.Repo.
+  # Remember the name under which you register the loader. (We'd use eg. :repo.)
+  # Using Dataloader in Absinthe: https://hexdocs.pm/absinthe/ecto.html#dataloader
+  # Dataloader.Ecto: https://hexdocs.pm/dataloader/Dataloader.Ecto.html#content
 end

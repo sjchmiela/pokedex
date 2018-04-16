@@ -49,8 +49,13 @@ defmodule Pokedex.Mixfile do
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:guardian, "~> 1.0"},
-      {:kronky, "~> 0.5.0"},
-      {:dataloader, "~> 1.0.2"}
+      {:kronky, "~> 0.5.0"}
+      # STEP 1
+      # Add dataloader dependency
+      # https://github.com/absinthe-graphql/dataloader#installation
+
+      # STEP 2
+      # Don't forget to run `mix deps.get` ;)
     ]
   end
 

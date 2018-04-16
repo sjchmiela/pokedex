@@ -1,25 +1,56 @@
 defmodule PokedexWeb.Schema.Trainership do
   use Absinthe.Schema.Notation
-  alias Absinthe.Relay.Connection
   use Absinthe.Relay.Schema.Notation, :modern
-  import Absinthe.Resolution.Helpers, only: [dataloader: 1, on_load: 2]
+
+  # STEP 8
+  # Import the dataloader/1 helper macro from Absinthe.Resolution.Helpers.
+  # (You've already done this in PokedexWeb.Schema.Accounts in step 5.)
+
+  # STEP 9
+  # Find 3 plain fields and use dataloader/1 to load the requested data.
+
+  # STEP 10
+  # Open up GraphiQL and ensure that the resolving works properly.
+  # query {
+  #   me {
+  #     trainer {
+  #       user {
+  #         id
+  #       }
+  #       pokemons(first: 5) {
+  #         edges {
+  #           node {
+  #             species {
+  #               name
+  #             }
+  #           }
+  #         }
+  #       }
+  #     }
+  #   }
+  # }
+
+  # STEP 11
+  # Admire the beauty of this solution.
+
+  # STEP 12
+  # Consider the connection field for pokemons on type trainer.
+  # Try to implement a custom resolve function, which will fetch the loader
+  # from the context and use it to download all the pokemons of the trainer
+  # and pass the list of all pokemons to the appropriate Absinthe.Relay.Connection.from_list/3.
+  # For inspiration go to https://hexdocs.pm/absinthe/Absinthe.Resolution.Helpers.html#on_load/2.
+  # (Note: You will need more than dataloader/1 from Absinthe.Resolution.helpers.)
 
   alias PokedexWeb.Resolvers.TrainershipResolver
 
   node object(:trainer) do
     field(:display_name, :string)
-    field(:user, :user, resolve: dataloader(:repo))
+    field(:user, :user) do
+      resolve(&TrainershipResolver.trainers_user/3)
+    end
 
     connection field(:pokemons, node_type: :pokemon) do
-      resolve(fn trainer, args, %{context: %{loader: loader}} ->
-        loader
-        |> Dataloader.load(:repo, :pokemons, trainer)
-        |> on_load(fn loader ->
-          loader
-          |> Dataloader.get(:repo, :pokemons, trainer)
-          |> Connection.from_list(args)
-        end)
-      end)
+      resolve(&TrainershipResolver.trainers_pokemons/3)
     end
   end
 
@@ -30,8 +61,12 @@ defmodule PokedexWeb.Schema.Trainership do
     field(:weight, :integer)
     field(:released_at, :datetime)
     field(:release_comment, :string)
-    field(:species, :species, resolve: dataloader(:repo))
-    field(:trainer, :trainer, resolve: dataloader(:repo))
+    field(:species, :species) do
+      resolve(&TrainershipResolver.pokemon_species/3)
+    end
+    field(:trainer, :trainer) do
+      resolve(&TrainershipResolver.pokemon_trainer/3)
+    end
 
     field(:caught_at, :datetime) do
       resolve(fn pokemon, _, _ -> {:ok, pokemon.inserted_at} end)
