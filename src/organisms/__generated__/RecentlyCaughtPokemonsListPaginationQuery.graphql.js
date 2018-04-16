@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9a6e8c92eac46d311420d1585a5b1637
+ * @relayHash a917eac252f74ce8e7314323acd6be3d
  */
 
 /* eslint-disable */
@@ -71,10 +71,6 @@ fragment PokemonRow_pokemon on Pokemon {
     imageUrl
     id
   }
-  releasedAt {
-    iso8601
-  }
-  releaseComment
 }
 */
 
@@ -120,22 +116,13 @@ v3 = {
   "name": "id",
   "args": null,
   "storageKey": null
-},
-v4 = [
-  {
-    "kind": "ScalarField",
-    "alias": null,
-    "name": "iso8601",
-    "args": null,
-    "storageKey": null
-  }
-];
+};
 return {
   "kind": "Request",
   "operationKind": "query",
   "name": "RecentlyCaughtPokemonsListPaginationQuery",
   "id": null,
-  "text": "query RecentlyCaughtPokemonsListPaginationQuery(\n  $count: Int!\n  $cursor: String\n  $trainerID: ID!\n) {\n  trainer: node(id: $trainerID) {\n    __typename\n    ...RecentlyCaughtPokemonsList_trainer_1G22uz\n    id\n  }\n}\n\nfragment RecentlyCaughtPokemonsList_trainer_1G22uz on Trainer {\n  id\n  pokemons(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...PokemonsList_pokemons\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment PokemonsList_pokemons on Pokemon {\n  id\n  ...PokemonRow_pokemon\n}\n\nfragment PokemonRow_pokemon on Pokemon {\n  id\n  weight\n  height\n  caughtAt {\n    iso8601\n  }\n  species {\n    name\n    imageUrl\n    id\n  }\n  releasedAt {\n    iso8601\n  }\n  releaseComment\n}\n",
+  "text": "query RecentlyCaughtPokemonsListPaginationQuery(\n  $count: Int!\n  $cursor: String\n  $trainerID: ID!\n) {\n  trainer: node(id: $trainerID) {\n    __typename\n    ...RecentlyCaughtPokemonsList_trainer_1G22uz\n    id\n  }\n}\n\nfragment RecentlyCaughtPokemonsList_trainer_1G22uz on Trainer {\n  id\n  pokemons(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...PokemonsList_pokemons\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment PokemonsList_pokemons on Pokemon {\n  id\n  ...PokemonRow_pokemon\n}\n\nfragment PokemonRow_pokemon on Pokemon {\n  id\n  weight\n  height\n  caughtAt {\n    iso8601\n  }\n  species {\n    name\n    imageUrl\n    id\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -258,7 +245,15 @@ return {
                             "args": null,
                             "concreteType": "Datetime",
                             "plural": false,
-                            "selections": v4
+                            "selections": [
+                              {
+                                "kind": "ScalarField",
+                                "alias": null,
+                                "name": "iso8601",
+                                "args": null,
+                                "storageKey": null
+                              }
+                            ]
                           },
                           {
                             "kind": "LinkedField",
@@ -285,23 +280,6 @@ return {
                               },
                               v3
                             ]
-                          },
-                          {
-                            "kind": "LinkedField",
-                            "alias": null,
-                            "name": "releasedAt",
-                            "storageKey": null,
-                            "args": null,
-                            "concreteType": "Datetime",
-                            "plural": false,
-                            "selections": v4
-                          },
-                          {
-                            "kind": "ScalarField",
-                            "alias": null,
-                            "name": "releaseComment",
-                            "args": null,
-                            "storageKey": null
                           },
                           v2
                         ]

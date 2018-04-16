@@ -11,7 +11,8 @@ defmodule PokedexWeb.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
-    plug(PokedexWeb.Context)
+    # STEP 10
+    # Plug `PokedexWeb.Context` into the processing pipeline.
   end
 
   scope "/" do

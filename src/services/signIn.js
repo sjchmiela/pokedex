@@ -1,5 +1,15 @@
 // @flow
 
+// STEP 14
+// Have a look on this file. This is a mutation wrapper. Though not required, it
+// helps to keep the code organized.
+// const mutation - mutation query
+// const SignIn - function that takes input = {username, password} and Relay Environment
+// and returns a promise that resolves to {token: token} or rejects with errors.
+// Docs:
+// * https://facebook.github.io/relay/docs/en/mutations.html#commitmutation
+// * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
+
 import type { Environment } from "relay-runtime";
 import { commitMutation, graphql } from "react-relay";
 

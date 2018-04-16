@@ -29,11 +29,10 @@ type StateType = {
   speciesListSearchTerm: ?string,
 };
 
+// STEP 19
+// Query also for `me { id }` so that we know if the user is logged in.
 const query = graphql`
   query ApplicationDrawerQuery($searchTerm: String) {
-    me {
-      id
-    }
     ...ConnectionSpeciesList_query @arguments(searchTerm: $searchTerm)
   }
 `;
@@ -51,13 +50,9 @@ const SignOutButton = ({ onClick }: () => void) => (
   </SimpleButton>
 );
 
-const ConnectedSignOutButton = withRelayData(
-  (props: ApplicationDrawerQuery) =>
-    props.me ? <SignOutButton {...props} /> : null,
-  query,
-  null,
-  { renderLoading: false },
-);
+// STEP 20
+// Implement `ConnectedSignOutButton` in a similar manner to AuthenticatedBottomNavigationButtons
+// in ./src/molecules/ApplicationNavigation.js i.e. wrap it with withRelayData.
 
 class ApplicationDrawer extends React.PureComponent<PropsType, StateType> {
   throttledSetState: StateType => void;
@@ -69,6 +64,13 @@ class ApplicationDrawer extends React.PureComponent<PropsType, StateType> {
     };
   }
 
+  // STEP 21
+  // Add `ConnectedSignOutButton` before `</ApplicationBar>`.
+  // Add prop `onClick` containing `() => this.props.setToken(null)`.
+  // `this.props.setToken` comes from ./src/services/RelayEnvironmentContext.js
+  // and it recreates RelayEnviornment with the token passed as an argument
+  // You should be able to log in and log out.
+
   renderAppBar = (props: {
     className: string,
     menuIconClassName: string,
@@ -78,7 +80,6 @@ class ApplicationDrawer extends React.PureComponent<PropsType, StateType> {
       <Hidden xsDown>
         <SimpleButtons />
       </Hidden>
-      <ConnectedSignOutButton onClick={() => this.props.setToken(null)} />
     </ApplicationBar>
   );
 

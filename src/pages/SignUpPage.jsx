@@ -13,9 +13,11 @@ import LinkButton from "../atoms/LinkButton";
 import PaperSheet from "../atoms/PaperSheet";
 import ErrorMessage from "../atoms/ErrorMessage";
 import PasswordInput from "../atoms/PasswordInput";
-import signUp, { MutationError } from "../services/signUp";
+import MutationError from "../services/MutationError";
 import type { ContextType } from "../services/withRelayEnvironmentContext";
 import withRelayEnvironmentContext from "../services/withRelayEnvironmentContext";
+// STEP 23
+// Import the signUp function from the last step.
 
 type PropsType = ContextRouter & ContextType;
 
@@ -36,16 +38,13 @@ class SignUpPage extends React.Component<PropsType, StateType> {
         error: null,
         processing: false,
       },
-      () =>
-        signUp(
-          {
-            username: this.state.username,
-            password: this.state.password,
-          },
-          this.props.environment,
-        )
-          .then(this.handleSuccess)
-          .catch(this.handleError),
+      () => {
+        // STEP 24
+        // Execute signUp function in analogy to step 16
+        // Try to sign up using http://localhost:4000/sign_up
+        // and later to sign in using the same credentials
+        alert("Processing signup");
+      },
     );
   };
 

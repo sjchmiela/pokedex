@@ -32,27 +32,12 @@ defmodule PokedexWeb.Schema do
     import_fields(:accounts)
     import_fields(:pokemons)
     import_fields(:relay)
-    import_fields(:trainership)
   end
 
-  mutation do
-    import_fields(:accounts_mutations)
-    import_fields(:trainership_mutations)
-  end
+  # STEP 1
+  # Add mutation block, just like the existing `query` one.
+  # Import fields from `:accounts_mutations` inside the new block.
 
-  subscription do
-    import_fields(:traninership_subscriptions)
-  end
-
-  def plugins do
-    [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
-  end
-
-  def context(ctx) do
-    loader =
-      Dataloader.new()
-      |> Dataloader.add_source(:repo, Dataloader.Ecto.new(Pokedex.Repo))
-
-    Map.put(ctx, :loader, loader)
-  end
+  # STEP 28
+  # Import fields from `:trainership_mutations` inside the `mutation` block.
 end

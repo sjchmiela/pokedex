@@ -15,8 +15,8 @@ import withRelayData from "../services/withRelayData";
 
 const routes = [
   { href: "/", icon: Home, label: "Home" },
-  { href: "/catch", icon: PokeballIcon, label: "Catch" },
-  { href: "/feed", icon: RssFeed, label: "Feed" },
+  // STEP 34
+  // Add the route `/catch`. Use PokeballIcon and name it `Catch`.
 ];
 
 const query = graphql`

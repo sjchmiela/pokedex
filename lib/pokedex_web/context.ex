@@ -1,33 +1,10 @@
-defmodule PokedexWeb.Context do
-  @behaviour Plug
-
-  import Plug.Conn
-
-  def init(opts), do: opts
-
-  def call(conn, _) do
-    context = build_context(conn)
-    Absinthe.Plug.put_options(conn, context: context)
-  end
-
-  @doc """
-  Return the current user context based on the authorization header
-  """
-  def build_context(conn) do
-    with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
-         {:ok, current_user} <- authorize(token) do
-      %{current_user: current_user}
-    else
-      _ -> %{}
-    end
-  end
-
-  defp authorize(token) do
-    Pokedex.Guardian.resource_from_token(token)
-    |> case do
-      {:ok, user, _} -> {:ok, user}
-      {:error, reason} -> {:error, reason}
-      _ -> {:error, "invalid authorization token"}
-    end
-  end
-end
+# STEP 9
+# We want to know which user is calling the query in the resolvers, that's why we
+# are creating a context with current_user.
+# Users are authenticated by `Authorization` header containing `Bearer _token_from_mutation_`.
+# Define a new module `PokedexWeb.Context`, which is a Plug.
+# Based on https://hexdocs.pm/absinthe/context-and-authentication.html#context-and-plugs
+# implement the context. With details not taken into account, the only part that needs to be changed is
+# the `authorize` function. Use `Pokedex.Guardian.resource_from_token` to implement it.
+# Docs:
+# * https://hexdocs.pm/guardian/Guardian.html#resource_from_token/4

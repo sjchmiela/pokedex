@@ -69,8 +69,8 @@ class CatchPage extends React.Component<PropsType, StateType> {
     );
   };
 
-  handleSuccess = ({ event }: { event: Object }) => {
-    alert(`You have caught ${event.pokemon.species.name}. Congrats!`);
+  handleSuccess = ({ pokemon }: { pokemon: Object }) => {
+    alert(`You have caught ${pokemon.species.name}. Congrats!`);
     this.setState({ processing: false, tokenInput: "" });
   };
 

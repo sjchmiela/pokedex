@@ -14,8 +14,6 @@ defmodule PokedexWeb.Schema.Relay do
         %{type: :trainer, id: id}, _ -> {:ok, Trainership.get_trainer!(id)}
         %{type: :species, id: id}, _ -> {:ok, Pokemons.get_species!(id)}
         %{type: :user, id: id}, _ -> {:ok, Accounts.get_user!(id)}
-        %{type: :edge_released, id: id}, _ -> {:ok, %{pokemon: Trainership.get_pokemon!(id)}}
-        %{type: :edge_caught, id: id}, _ -> {:ok, %{pokemon: Trainership.get_pokemon!(id)}}
         _, _ -> {:error, "Unknown node ID supplied."}
       end)
     end
@@ -34,12 +32,6 @@ defmodule PokedexWeb.Schema.Relay do
 
       %User{}, _ ->
         :user
-
-      %{type: :released}, _ ->
-        :event_released
-
-      %{type: :caught}, _ ->
-        :event_caught
 
       _, _ ->
         nil

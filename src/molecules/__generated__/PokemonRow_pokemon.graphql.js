@@ -21,26 +21,12 @@ export type PokemonRow_pokemon = {|
     +name: ?string,
     +imageUrl: ?string,
   |},
-  +releasedAt: ?{|
-    +iso8601: ?string,
-  |},
-  +releaseComment: ?string,
   +$refType: PokemonRow_pokemon$ref,
 |};
 */
 
 
-const node/*: ConcreteFragment*/ = (function(){
-var v0 = [
-  {
-    "kind": "ScalarField",
-    "alias": null,
-    "name": "iso8601",
-    "args": null,
-    "storageKey": null
-  }
-];
-return {
+const node/*: ConcreteFragment*/ = {
   "kind": "Fragment",
   "name": "PokemonRow_pokemon",
   "type": "Pokemon",
@@ -76,7 +62,15 @@ return {
       "args": null,
       "concreteType": "Datetime",
       "plural": false,
-      "selections": v0
+      "selections": [
+        {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "iso8601",
+          "args": null,
+          "storageKey": null
+        }
+      ]
     },
     {
       "kind": "LinkedField",
@@ -102,26 +96,8 @@ return {
           "storageKey": null
         }
       ]
-    },
-    {
-      "kind": "LinkedField",
-      "alias": null,
-      "name": "releasedAt",
-      "storageKey": null,
-      "args": null,
-      "concreteType": "Datetime",
-      "plural": false,
-      "selections": v0
-    },
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "releaseComment",
-      "args": null,
-      "storageKey": null
     }
   ]
 };
-})();
-(node/*: any*/).hash = 'd2d2e51912b69a400133b563348f31df';
+(node/*: any*/).hash = 'e437574e17af755c24507b768a6376ff';
 module.exports = node;

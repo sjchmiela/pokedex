@@ -8,14 +8,15 @@ import InputLabel from "material-ui/Input/InputLabel";
 import type { ContextRouter } from "react-router-dom";
 import FormControl from "material-ui/Form/FormControl";
 
-import signIn from "../services/signIn";
 import PaperSheet from "../atoms/PaperSheet";
 import LinkButton from "../atoms/LinkButton";
 import ErrorMessage from "../atoms/ErrorMessage";
 import PasswordInput from "../atoms/PasswordInput";
-import saveAuthenticationToken from "../services/saveAuthenticationToken";
 import type { ContextType } from "../services/withRelayEnvironmentContext";
 import withRelayEnvironmentContext from "../services/withRelayEnvironmentContext";
+import saveAuthenticationToken from "../services/saveAuthenticationToken";
+// STEP 15
+// Import the signIn function from the last step.
 
 type PropsType = ContextRouter & ContextType;
 
@@ -36,22 +37,24 @@ class SignInPage extends React.Component<PropsType, StateType> {
         error: null,
         processing: true,
       },
-      () =>
-        signIn(
-          {
-            username: this.state.username,
-            password: this.state.password,
-          },
-          this.props.environment,
-        )
-          .then(this.handleSuccess)
-          .catch(this.handleError),
+      () => {
+        // STEP 16
+        // Execute signIn function passing object with username and password from this.state
+        // and this.props.environment as the second argument (evironment and setToken props are
+        // managed by Relay Context defined in ../services/RelayEnvironmentContext.js)
+        // Use `this.handleSuccess` as the success callback and `this.handleError` as the failure callback.
+        alert("Processing signin");
+      },
     );
   };
 
   handleSuccess = ({ token }: { token: string }) => {
     saveAuthenticationToken(token);
     this.props.setToken(token);
+    // STEP 17
+    // Add `console.log(token)` to see if the mutation works
+    // Go to http://localhost:4000/sign_in and try to log in with credentials created in step 5
+    // (or create new user with GraphiQL)
   };
 
   handleError = (error: Error) =>
