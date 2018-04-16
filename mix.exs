@@ -41,10 +41,17 @@ defmodule Pokedex.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:absinthe, "~> 1.4"},
-      {:absinthe_plug, "~> 1.4"},
-      {:absinthe_relay, "~> 1.4"},
-      {:absinthe_phoenix, "~> 1.4"},
+      # STEP 1
+      # Add Absinthe (https://github.com/absinthe-graphql/absinthe).
+      # It adds core GraphQL support to the Elixir project.
+      # Also add Absinthe Plug (https://github.com/absinthe-graphql/absinthe_plug)
+      # for easy integration with Phoenix and to install GrqphiQL
+      # (https://github.com/graphql/graphiql).
+      #
+      # Don't forget to run `mix deps.get`.
+      #
+      # As setting up frontend project with Relay is not straightforward,
+      # you start with a preconfigured frontend project.
       {:jason, "~> 1.0"},
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},

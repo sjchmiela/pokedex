@@ -1,19 +1,23 @@
 // @flow
 
 import * as React from "react";
-import Waypoint from "react-waypoint";
 import List from "material-ui/List/List";
 import ListItem from "material-ui/List/ListItem";
 import ListItemText from "material-ui/List/ListItemText";
-import { createFragmentContainer, graphql } from "react-relay";
+// STEP 12
+// Now we're gonna prepare SpeciesList to request and digest data from Relay.
+// Let's import from "react-relay":
+// * { graphql } - to denote GraphQL queries
+// * { createFragmentContainer } - to create a [Fragment Container](https://facebook.github.io/relay/docs/en/fragment-container.html)
+
+// STEP 16
+// Add `import SpeciesList_species from "./__generated__/SpeciesList_species"`
+// and use the imported type as the type of `species` prop.
 
 import PokemonImage from "../atoms/PokemonImage";
 
-import SpeciesList_species from "./__generated__/SpeciesList_species";
-
 type PropsType = {
-  species: SpeciesList_species,
-  onLoadMore?: () => void,
+  species: Array<SpeciesType>,
   searchTerm?: ?string,
 };
 
@@ -22,10 +26,22 @@ type SpeciesType = {
   name: string,
   imageUrl: ?string,
 };
+// STEP 13
+// Remove `export default` as we will export component created by `createFragmentContainer` [HOC](https://reactjs.org/docs/higher-order-components.html)
+export default class SpeciesList extends React.Component<PropsType> {
+  getSpecies = (): Array<SpeciesType> => {
+    const allSpecies = this.props.species;
 
-class SpeciesList extends React.Component<PropsType> {
-  maybeRenderWaypoint = (): ?React.Node =>
-    this.props.onLoadMore ? <Waypoint onEnter={this.props.onLoadMore} /> : null;
+    if (this.props.searchTerm) {
+      const searchTerm: string = this.props.searchTerm.toLowerCase();
+
+      return allSpecies.filter((species: SpeciesType): boolean =>
+        species.name.toLowerCase().includes(searchTerm),
+      );
+    }
+
+    return allSpecies;
+  };
 
   renderAvatar = (species: SpeciesType): ?React.Node =>
     species.imageUrl ? (
@@ -39,26 +55,26 @@ class SpeciesList extends React.Component<PropsType> {
     </ListItem>
   );
 
-  renderAllSpecies = (species: Array<SpeciesType>): React.Element<*> => (
-    // $FlowFixMeOrYourself
-    <React.Fragment>
-      {species.slice(0, 3 * species.length / 4).map(this.renderSpecies)}
-      {this.maybeRenderWaypoint()}
-      {species.slice(3 * species.length / 4).map(this.renderSpecies)}
-    </React.Fragment>
-  );
+  renderAllSpecies = (species: Array<SpeciesType>): Array<React.Element<*>> =>
+    species.map(this.renderSpecies);
 
   render() {
-    return <List>{this.renderAllSpecies(this.props.species)}</List>;
+    const species = this.getSpecies();
+
+    return <List>{this.renderAllSpecies(species)}</List>;
   }
 }
 
-export default createFragmentContainer(SpeciesList, {
-  species: graphql`
-    fragment SpeciesList_species on Species @relay(plural: true) {
-      id
-      name
-      imageUrl
-    }
-  `,
-});
+// STEP 14
+// Try to write a query in GraphiQL that uses `fragment <name> on Species` (http://graphql.org/learn/queries/#fragments).
+// Use GraphiQL for autocomplete. Don't worry about GraphiQL's
+// "fragment is not used" complains.
+// Generate `schema.json` that is used by (Relay Compiler)[https://facebook.github.io/relay/docs/en/graphql-in-relay.html#relay-compiler]
+// to staticly check and compile queries from JavaScript code. You can do this by executing `mix graphql.schema`.
+
+// STEP 15
+// Create a fragment container using `createFragmentContainer`. The query should consist of a fragment named
+// `WrappedComponentName_item` with `@relay(plural: true)` annotation that indicates its use on plural field (array).
+// In result the first line of the query should look like this: `fragment SpeciesList_species on Species @relay(plural: true) {`
+// Please include the attributes listed in `type SpeciesType` and export the created fragment container by default:
+// `export default createFragmentContainer(...`

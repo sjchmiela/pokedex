@@ -1,58 +1,43 @@
-defmodule PokedexWeb.Schema do
-  use Absinthe.Schema
-  use Absinthe.Relay.Schema, :modern
+# STEP 2
+# Create an empty module `PokedexWeb.Schema` for our GraphQL schema.
+# You will need to "use" Absinthe.Schema for PokedexWeb.Schema to implement required functions.
 
-  object :datetime do
-    field(:iso8601, :string) do
-      resolve(fn datetime, _, _ ->
-        datetime_string =
-          case datetime do
-            %DateTime{} ->
-              DateTime.to_iso8601(datetime)
+# STEP 6
+# Write a query schema with one field `number_one` of type `integer` at root level,
+# that always resolves to `1`.
+# Note: resolve functions must return {:ok, value} or {:error, value}.
+# Try to experiment with both options in the next step.
+# Hint: In the query you may use `numberOne` as well as `number_one`.
+# Docs:
+# * https://hexdocs.pm/absinthe/our-first-query.html
+# * https://hexdocs.pm/absinthe/schemas.html
+# * https://hexdocs.pm/absinthe/Absinthe.Schema.html
+# * https://hexdocs.pm/absinthe/Absinthe.Schema.html#query/2
+# * https://hexdocs.pm/absinthe/Absinthe.Schema.Notation.html#field/2
+# * https://hexdocs.pm/absinthe/Absinthe.Schema.Notation.html#resolve/1
 
-            %NaiveDateTime{} ->
-              # we want timezone info
-              DateTime.to_iso8601(DateTime.from_naive!(datetime, "Etc/UTC"))
+# STEP 7
+# Go to /graphiql and try to fetch a value for newly created field `one`.
+# Hint: You can start GraphQL query with either `query {` or just `{`.
+# After you write the beginning you can use (Alt/Cmd/Ctrl)+Space (depending on the browser).
+# Docs:
+# https://graphql.org/learn/
 
-            nil ->
-              nil
-          end
+# STEP 8
+# Define object type `species`. Add fields for all the attributes
+# with correspoding types with no resolver (which means default resolver will be used).
+# Find the new type in the GraphiQL docs (after refresh).
+# Docs:
+# * https://hexdocs.pm/absinthe/Absinthe.Schema.Notation.html#object/3
 
-        {:ok, datetime_string}
-      end)
-    end
-  end
+# STEP 10
+# Add new root level field `species_array`, which is of type: list of species.
+# Use the resolve function defined in the previous step.
+# Try to query the new field in GraphiQL (after refreshing). Note you have to create a subquery for species fields.
+# Docs:
+# * https://hexdocs.pm/absinthe/Absinthe.Schema.Notation.html#list_of/1
 
-  import_types(PokedexWeb.Schema.Accounts)
-  import_types(PokedexWeb.Schema.Pokemons)
-  import_types(PokedexWeb.Schema.Trainership)
-  import_types(PokedexWeb.Schema.Relay)
-
-  query do
-    import_fields(:accounts)
-    import_fields(:pokemons)
-    import_fields(:relay)
-    import_fields(:trainership)
-  end
-
-  mutation do
-    import_fields(:accounts_mutations)
-    import_fields(:trainership_mutations)
-  end
-
-  subscription do
-    import_fields(:traninership_subscriptions)
-  end
-
-  def plugins do
-    [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
-  end
-
-  def context(ctx) do
-    loader =
-      Dataloader.new()
-      |> Dataloader.add_source(:repo, Dataloader.Ecto.new(Pokedex.Repo))
-
-    Map.put(ctx, :loader, loader)
-  end
-end
+# STEP 11
+# Exercise
+# Add a new field `name` to species. It should return capitalized slug.
+# If in doubt, take a second look at resolve function arguments.

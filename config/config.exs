@@ -22,7 +22,11 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
-config :absinthe, schema: PokedexWeb.Schema, json_codec: Jason
+# STEP 3
+# Add config for Absinthe that defines schema, so that we can use `mix absinthe.schema.json`
+# without schema argument. Also choose `Jason` as the json codec (it's faster than `Poison`).
+# `config :absinthe, schema: PokedexWeb.Schema, json_codec: Jason`
+# (we leave that line in its final form, as we haven't found any docs for this config)
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

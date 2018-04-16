@@ -1,6 +1,5 @@
 defmodule PokedexWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :pokedex
-  use Absinthe.Phoenix.Endpoint
 
   socket("/socket", PokedexWeb.UserSocket)
 
@@ -27,11 +26,13 @@ defmodule PokedexWeb.Endpoint do
   plug(Plug.RequestId)
   plug(Plug.Logger)
 
+  # STEP 4
+  # Replace `Poison` with `Jason`.
   plug(
     Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
-    json_decoder: Jason
+    json_decoder: Poison
   )
 
   plug(Plug.MethodOverride)
