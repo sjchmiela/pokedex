@@ -1,19 +1,17 @@
 // @flow
 
 import * as React from "react";
-import Waypoint from "react-waypoint";
 import List from "material-ui/List/List";
 import ListItem from "material-ui/List/ListItem";
 import ListItemText from "material-ui/List/ListItemText";
-import { createFragmentContainer, graphql } from "react-relay";
-
-import PokemonImage from "../atoms/PokemonImage";
+import { graphql, createFragmentContainer } from "react-relay";
 
 import SpeciesList_species from "./__generated__/SpeciesList_species";
 
+import PokemonImage from "../atoms/PokemonImage";
+
 type PropsType = {
   species: SpeciesList_species,
-  onLoadMore?: () => void,
   searchTerm?: ?string,
 };
 
@@ -24,8 +22,19 @@ type SpeciesType = {
 };
 
 class SpeciesList extends React.Component<PropsType> {
-  maybeRenderWaypoint = (): ?React.Node =>
-    this.props.onLoadMore ? <Waypoint onEnter={this.props.onLoadMore} /> : null;
+  getSpecies = (): Array<SpeciesType> => {
+    const allSpecies = this.props.species;
+
+    if (this.props.searchTerm) {
+      const searchTerm: string = this.props.searchTerm.toLowerCase();
+
+      return allSpecies.filter((species: SpeciesType): boolean =>
+        species.name.toLowerCase().includes(searchTerm),
+      );
+    }
+
+    return allSpecies;
+  };
 
   renderAvatar = (species: SpeciesType): ?React.Node =>
     species.imageUrl ? (
@@ -39,17 +48,13 @@ class SpeciesList extends React.Component<PropsType> {
     </ListItem>
   );
 
-  renderAllSpecies = (species: Array<SpeciesType>): React.Element<*> => (
-    // $FlowFixMeOrYourself
-    <React.Fragment>
-      {species.slice(0, 3 * species.length / 4).map(this.renderSpecies)}
-      {this.maybeRenderWaypoint()}
-      {species.slice(3 * species.length / 4).map(this.renderSpecies)}
-    </React.Fragment>
-  );
+  renderAllSpecies = (species: Array<SpeciesType>): Array<React.Element<*>> =>
+    species.map(this.renderSpecies);
 
   render() {
-    return <List>{this.renderAllSpecies(this.props.species)}</List>;
+    const species = this.getSpecies();
+
+    return <List>{this.renderAllSpecies(species)}</List>;
   }
 }
 

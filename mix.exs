@@ -41,10 +41,12 @@ defmodule Pokedex.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:absinthe, "~> 1.4"},
-      {:absinthe_plug, "~> 1.4"},
-      {:absinthe_relay, "~> 1.4"},
-      {:absinthe_phoenix, "~> 1.4"},
+      {:absinthe, "~> 1.4.0"},
+      {:absinthe_plug, "~> 1.4.0"},
+      # STEP 1
+      # Add :absinthe_relay dependency to the deps
+      # https://github.com/absinthe-graphql/absinthe_relay
+      # Don't forget to run mix deps.get!
       {:jason, "~> 1.0"},
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},

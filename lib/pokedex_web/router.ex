@@ -11,20 +11,12 @@ defmodule PokedexWeb.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
-    plug(PokedexWeb.Context)
   end
 
   scope "/" do
     pipe_through(:api)
-
-    forward(
-      "/graphiql",
-      Absinthe.Plug.GraphiQL,
-      schema: PokedexWeb.Schema,
-      socket: PokedexWeb.UserSocket
-    )
-
     forward("/graphql", Absinthe.Plug, schema: PokedexWeb.Schema)
+    forward("/graphiql", Absinthe.Plug.GraphiQL, schema: PokedexWeb.Schema)
   end
 
   scope "/", PokedexWeb do

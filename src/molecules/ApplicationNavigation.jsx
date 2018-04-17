@@ -1,31 +1,15 @@
 // @flow
 
 import * as React from "react";
-import { graphql } from "react-relay";
 import Home from "@material-ui/icons/Home";
 import { withRouter } from "react-router-dom";
-import RssFeed from "@material-ui/icons/RssFeed";
 import type { ContextRouter } from "react-router-dom";
 import BottomNavigation from "material-ui/BottomNavigation";
 import BottomNavigationAction from "material-ui/BottomNavigation/BottomNavigationAction";
 
 import SimpleButton from "../atoms/SimpleButton";
-import PokeballIcon from "../atoms/PokeballIcon";
-import withRelayData from "../services/withRelayData";
 
-const routes = [
-  { href: "/", icon: Home, label: "Home" },
-  { href: "/catch", icon: PokeballIcon, label: "Catch" },
-  { href: "/feed", icon: RssFeed, label: "Feed" },
-];
-
-const query = graphql`
-  query ApplicationNavigationQuery {
-    me {
-      id
-    }
-  }
-`;
+const routes = [{ href: "/", icon: Home, label: "Home" }];
 
 const NavigationButtons = (props: ContextRouter) => (
   // $FlowFixMe: Flow thinks React does not export Fragment. I don't care what it thinks.
@@ -43,14 +27,6 @@ const NavigationButtons = (props: ContextRouter) => (
 );
 
 const NavigationButtonsWithRouter = withRouter(NavigationButtons);
-
-const AuthenticatedNavigationButtons = withRelayData(
-  (props: Object) =>
-    props.me ? <NavigationButtonsWithRouter {...props} /> : null,
-  query,
-  null,
-  { renderLoading: false },
-);
 
 const BottomNavigationButtons = (
   props: ContextRouter & {
@@ -73,19 +49,10 @@ const BottomNavigationButtons = (
   </BottomNavigation>
 );
 
-const AuthenticatedBottomNavigationButtons = withRelayData(
-  (props: Object) => (props.me ? <BottomNavigationButtons {...props} /> : null),
-  query,
-  null,
-  { renderLoading: false },
-);
-
-const AuthenticatedBottomNavigationButtonsWithRouter = withRouter(
-  AuthenticatedBottomNavigationButtons,
-);
+const BottomNavigationButtonsWithRouter = withRouter(BottomNavigationButtons);
 
 export {
-  AuthenticatedBottomNavigationButtonsWithRouter as BottomNavigation,
-  AuthenticatedNavigationButtons as SimpleButtons,
+  BottomNavigationButtonsWithRouter as BottomNavigation,
+  NavigationButtonsWithRouter as SimpleButtons,
   routes,
 };

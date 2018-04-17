@@ -1,27 +1,31 @@
 // @flow
 
 import * as React from "react";
-import { graphql } from "react-relay";
 import Hidden from "material-ui/Hidden";
 import { throttle } from "throttle-debounce";
-import ExitToApp from "@material-ui/icons/ExitToApp";
+import type { ReadyState } from "react-relay";
+import { graphql, QueryRenderer } from "react-relay";
 
 import SearchField from "../atoms/SearchField";
-import SimpleButton from "../atoms/SimpleButton";
-import withRelayData from "../services/withRelayData";
 import ApplicationBar from "../molecules/ApplicationBar";
+
+// STEP 14
+// Let's use a connection-aware Relay
+// Import ConnectionSpeciesList from ../organisms/ConnectionSpeciesList.
+// You can remove the SpeciesList import.
+import SpeciesList from "../organisms/SpeciesList";
+
 import {
   SimpleButtons,
   BottomNavigation,
 } from "../molecules/ApplicationNavigation";
 import ResponsiveDrawer from "../molecules/ResponsiveDrawer";
-import ConnectionSpeciesList from "../organisms/ConnectionSpeciesList";
-import withRelayEnvironmentContext from "../services/withRelayEnvironmentContext";
-import type { ContextType } from "../services/withRelayEnvironmentContext";
 
-import ApplicationDrawerQuery from "./__generated__/ApplicationDrawerQuery";
+import createRelayEnvironment from "../services/createRelayEnvironment";
 
-type PropsType = ContextType & {
+const environment = createRelayEnvironment();
+
+type PropsType = {
   children?: ?React.Node,
 };
 
@@ -29,44 +33,66 @@ type StateType = {
   speciesListSearchTerm: ?string,
 };
 
-const query = graphql`
-  query ApplicationDrawerQuery($searchTerm: String) {
-    me {
-      id
-    }
-    ...ConnectionSpeciesList_query @arguments(searchTerm: $searchTerm)
-  }
-`;
+// STEP 13
+// Let's use our species connection to render the species list.
+// Remember to run mix graphql.schema and restart the server!
+//
+// Change `speciesArray` into `species(first: 15)` and nest
+// ...SpeciesList_species inside `edges { node {} }`.
+// To pass the new species list to <SpeciesList /> component
+// you will need to also change how the species prop is passed
+// in there (readyState.props.speciesArray is no longet available),
+// instead you can use readyState.props.species.edges.map(edge => edge.node)
+// to change list of edges into list of species nodes.
+//
+// After this update a list of 15 Pokemon species should render in the application drawer.
 
-const ConnectedSpeciesList = withRelayData(
-  (props: ApplicationDrawerQuery & Object) => (
-    <ConnectionSpeciesList {...props} query={props} />
-  ),
-  query,
+const ConnectedSpeciesList = props => (
+  <QueryRenderer
+    {...props}
+    // STEP 31
+    // As we are already receiving the searchTerm
+    // in props, let's include the term in variables,
+    // so it is passed to the GraphQL query.
+    variables={{}}
+    environment={environment}
+    query={graphql`
+      # STEP 29
+      # Add an argument to the ApplicationDrawerQuery, eg. ($searchTerm: String)
+      query ApplicationDrawerQuery {
+        speciesArray {
+          ...SpeciesList_species
+        }
+        # STEP 30
+        # Pass the searchTerm argument to the query fragment
+        # with @arguments(name: $value) annotation
+      }
+    `}
+    render={(readyState: ReadyState) => {
+      if (readyState.error) {
+        return <p>Error</p>;
+      }
+      if (!readyState.props) {
+        return <p>Loading</p>;
+      }
+      // STEP 15
+      // Change SpeciesList to ConnectionSpeciesList. Pass in readyState.props
+      // as the query prop. Also please change the content of ApplicationDrawerQuery
+      // to spread ...ConnectionSpeciesList_query on query level.
+      return <SpeciesList {...props} species={readyState.props.speciesArray} />;
+    }}
+  />
 );
 
-const SignOutButton = ({ onClick }: () => void) => (
-  <SimpleButton IconComponent={ExitToApp} onClick={onClick}>
-    Sign out
-  </SimpleButton>
-);
-
-const ConnectedSignOutButton = withRelayData(
-  (props: ApplicationDrawerQuery) =>
-    props.me ? <SignOutButton {...props} /> : null,
-  query,
-  null,
-  { renderLoading: false },
-);
-
-class ApplicationDrawer extends React.PureComponent<PropsType, StateType> {
+export default class ApplicationDrawer extends React.PureComponent<
+  PropsType,
+  StateType,
+> {
   throttledSetState: StateType => void;
-  constructor(props) {
+  constructor(props: PropsType) {
     super(props);
     this.throttledSetState = throttle(500, this.setState);
-    this.state = {
-      speciesListSearchTerm: null,
-    };
+    this.state = { speciesListSearchTerm: null };
   }
 
   renderAppBar = (props: {
@@ -78,7 +104,6 @@ class ApplicationDrawer extends React.PureComponent<PropsType, StateType> {
       <Hidden xsDown>
         <SimpleButtons />
       </Hidden>
-      <ConnectedSignOutButton onClick={() => this.props.setToken(null)} />
     </ApplicationBar>
   );
 
@@ -91,9 +116,7 @@ class ApplicationDrawer extends React.PureComponent<PropsType, StateType> {
   );
 
   renderSpeciesList = () => (
-    <ConnectedSpeciesList
-      variables={{ searchTerm: this.state.speciesListSearchTerm }}
-    />
+    <ConnectedSpeciesList searchTerm={this.state.speciesListSearchTerm} />
   );
 
   renderBottomNavigation = (props: Object) => (
@@ -115,5 +138,3 @@ class ApplicationDrawer extends React.PureComponent<PropsType, StateType> {
     );
   }
 }
-
-export default withRelayEnvironmentContext(ApplicationDrawer);

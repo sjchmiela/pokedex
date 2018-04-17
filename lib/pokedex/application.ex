@@ -11,8 +11,7 @@ defmodule Pokedex.Application do
       # Start the Ecto repository
       supervisor(Pokedex.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(PokedexWeb.Endpoint, []),
-      supervisor(Absinthe.Subscription, [PokedexWeb.Endpoint])
+      supervisor(PokedexWeb.Endpoint, [])
       # Start your own worker by calling: Pokedex.Worker.start_link(arg1, arg2, arg3)
       # worker(Pokedex.Worker, [arg1, arg2, arg3]),
     ]
