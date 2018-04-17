@@ -12,7 +12,11 @@ defmodule Pokedex.Application do
       supervisor(Pokedex.Repo, []),
       # Start the endpoint when the application starts
       supervisor(PokedexWeb.Endpoint, []),
-      supervisor(Absinthe.Subscription, [PokedexWeb.Endpoint])
+
+      # STEP 1
+      # Add Absinthe.Subscription supervisor to children that will
+      # receive PokedexWeb.Endpoint as its argument.
+
       # Start your own worker by calling: Pokedex.Worker.start_link(arg1, arg2, arg3)
       # worker(Pokedex.Worker, [arg1, arg2, arg3]),
     ]

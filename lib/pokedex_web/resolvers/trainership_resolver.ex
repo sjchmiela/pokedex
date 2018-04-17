@@ -2,9 +2,23 @@ defmodule PokedexWeb.Resolvers.TrainershipResolver do
   import PokedexWeb.Resolvers.Helpers
   alias Pokedex.Repo
   alias Pokedex.Trainership
-  alias Trainership.{Pokemon}
+  alias Trainership.{Pokemon, Trainer}
+  alias Absinthe.Relay.Connection
   alias Pokedex.Accounts.User
   import Ecto.Query, only: [from: 2]
+
+  def trainers_user(%Trainer{user: %Ecto.Association.NotLoaded{}} = trainer, args, info),
+    do: trainer |> Repo.preload(:user) |> trainers_user(args, info)
+
+  def trainers_user(%Trainer{user: user}, _args, _info), do: {:ok, user}
+
+  def trainers_pokemons(%Trainer{pokemons: %Ecto.Association.NotLoaded{}} = trainer, args, _info),
+    do:
+      from(p in Pokemon, where: p.trainer_id == ^trainer.id, order_by: [desc: :inserted_at])
+      |> Connection.from_query(&Repo.all/1, args)
+
+  def trainers_pokemons(%Trainer{pokemons: pokemons}, args, _info),
+    do: Connection.from_list(pokemons, args)
 
   def pokemon_species(%Pokemon{species: %Ecto.Association.NotLoaded{}} = pokemon, args, info),
     do: pokemon |> Repo.preload(:species) |> pokemon_species(args, info)

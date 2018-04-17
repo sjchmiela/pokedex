@@ -1,6 +1,8 @@
 defmodule PokedexWeb.UserSocket do
   use Phoenix.Socket
-  use Absinthe.Phoenix.Socket, schema: PokedexWeb.Schema
+  # STEP 3
+  # Use Absinthe.Phoenix.Socket in this module,
+  # with PokedexWeb.Schema as schema configuration argument.
 
   ## Channels
   # channel "room:*", PokedexWeb.RoomChannel

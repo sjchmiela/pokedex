@@ -1,13 +1,14 @@
 defmodule PokedexWeb.Schema.Accounts do
   use Absinthe.Schema.Notation
   use Absinthe.Relay.Schema.Notation, :modern
-  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
   alias PokedexWeb.Resolvers.AccountsResolver
 
   node object(:user) do
     field(:username, :string)
-    field(:trainer, :trainer, resolve: dataloader(:repo))
+    field(:trainer, :trainer) do
+      resolve(&AccountsResolver.get_trainer/3)
+    end
   end
 
   connection(node_type: :user)

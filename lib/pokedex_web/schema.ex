@@ -40,19 +40,9 @@ defmodule PokedexWeb.Schema do
     import_fields(:trainership_mutations)
   end
 
-  subscription do
-    import_fields(:traninership_subscriptions)
-  end
+  # STEP 4
+  # Just as query and mutation are defined up there, define subscription root field type.
 
-  def plugins do
-    [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
-  end
-
-  def context(ctx) do
-    loader =
-      Dataloader.new()
-      |> Dataloader.add_source(:repo, Dataloader.Ecto.new(Pokedex.Repo))
-
-    Map.put(ctx, :loader, loader)
-  end
+  # STEP 6
+  # Import fields from object :trainership_subscriptions into the subscription root type.
 end
