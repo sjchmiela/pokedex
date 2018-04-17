@@ -8,9 +8,7 @@ services:
   # Our Phoenix container
   phoenix:
     # The build parameters for this container.
-    build:
-      # Here we define that it should build from the current directory
-      context: .
+    image: ukasiu/pokedex
     environment:
       # Variable to connect to our Postgres server
       #             scheme    ://username:password@host:port/database
