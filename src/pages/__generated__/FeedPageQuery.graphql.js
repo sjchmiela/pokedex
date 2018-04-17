@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 039a69183b93bfd6d726fcdab973ecec
+ * @relayHash 117fc762be4c87a5595f322221a748bd
  */
 
 /* eslint-disable */
@@ -9,16 +9,33 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-type EventRow_event$ref = any;
+type EventCaughtRow_event$ref = any;
+type EventReleasedRow_event$ref = any;
 export type FeedPageQueryVariables = {| |};
 export type FeedPageQueryResponse = {|
   +viewer: ?{|
     +id: ?string,
-    +events: ?{|
+    +releaseEvents: ?{|
       +edges: ?$ReadOnlyArray<?{|
         +node: ?{|
           +id: string,
-          +$fragmentRefs: EventRow_event$ref,
+          +at: ?{|
+            +iso8601: ?string,
+          |},
+          +typename: string,
+          +$fragmentRefs: EventReleasedRow_event$ref,
+        |},
+      |}>,
+    |},
+    +caughtEvents: ?{|
+      +edges: ?$ReadOnlyArray<?{|
+        +node: ?{|
+          +id: string,
+          +at: ?{|
+            +iso8601: ?string,
+          |},
+          +typename: string,
+          +$fragmentRefs: EventCaughtRow_event$ref,
         |},
       |}>,
     |},
@@ -31,50 +48,30 @@ export type FeedPageQueryResponse = {|
 query FeedPageQuery {
   viewer {
     id
-    events(first: 5) {
+    releaseEvents(first: 5) {
       edges {
         node {
           id
-          ...EventRow_event
-          __typename
+          at {
+            iso8601
+          }
+          typename: __typename
+          ...EventReleasedRow_event
         }
-        cursor
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
       }
     }
-  }
-}
-
-fragment EventRow_event on Event {
-  typename: __typename
-  id
-  at {
-    iso8601
-  }
-  ...EventCaughtRow_event
-  ...EventReleasedRow_event
-}
-
-fragment EventCaughtRow_event on EventCaught {
-  pokemon {
-    weight
-    height
-    caughtAt {
-      iso8601
+    caughtEvents(first: 5) {
+      edges {
+        node {
+          id
+          at {
+            iso8601
+          }
+          typename: __typename
+          ...EventCaughtRow_event
+        }
+      }
     }
-    species {
-      name
-      imageUrl
-      id
-    }
-    trainer {
-      displayName
-      id
-    }
-    id
   }
 }
 
@@ -101,6 +98,26 @@ fragment EventReleasedRow_event on EventReleased {
     id
   }
 }
+
+fragment EventCaughtRow_event on EventCaught {
+  pokemon {
+    weight
+    height
+    caughtAt {
+      iso8601
+    }
+    species {
+      name
+      imageUrl
+      id
+    }
+    trainer {
+      displayName
+      id
+    }
+    id
+  }
+}
 */
 
 const node/*: ConcreteRequest*/ = (function(){
@@ -111,46 +128,15 @@ var v0 = {
   "args": null,
   "storageKey": null
 },
-v1 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "__typename",
-  "args": null,
-  "storageKey": null
-},
-v2 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "cursor",
-  "args": null,
-  "storageKey": null
-},
-v3 = {
-  "kind": "LinkedField",
-  "alias": null,
-  "name": "pageInfo",
-  "storageKey": null,
-  "args": null,
-  "concreteType": "PageInfo",
-  "plural": false,
-  "selections": [
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "endCursor",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "hasNextPage",
-      "args": null,
-      "storageKey": null
-    }
-  ]
-},
-v4 = [
+v1 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 5,
+    "type": "Int"
+  }
+],
+v2 = [
   {
     "kind": "ScalarField",
     "alias": null,
@@ -159,6 +145,23 @@ v4 = [
     "storageKey": null
   }
 ],
+v3 = {
+  "kind": "LinkedField",
+  "alias": null,
+  "name": "at",
+  "storageKey": null,
+  "args": null,
+  "concreteType": "Datetime",
+  "plural": false,
+  "selections": v2
+},
+v4 = {
+  "kind": "ScalarField",
+  "alias": "typename",
+  "name": "__typename",
+  "args": null,
+  "storageKey": null
+},
 v5 = {
   "kind": "LinkedField",
   "alias": null,
@@ -167,7 +170,7 @@ v5 = {
   "args": null,
   "concreteType": "Datetime",
   "plural": false,
-  "selections": v4
+  "selections": v2
 },
 v6 = {
   "kind": "ScalarField",
@@ -233,20 +236,8 @@ return {
   "operationKind": "query",
   "name": "FeedPageQuery",
   "id": null,
-  "text": "query FeedPageQuery {\n  viewer {\n    id\n    events(first: 5) {\n      edges {\n        node {\n          id\n          ...EventRow_event\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n  }\n}\n\nfragment EventRow_event on Event {\n  typename: __typename\n  id\n  at {\n    iso8601\n  }\n  ...EventCaughtRow_event\n  ...EventReleasedRow_event\n}\n\nfragment EventCaughtRow_event on EventCaught {\n  pokemon {\n    weight\n    height\n    caughtAt {\n      iso8601\n    }\n    species {\n      name\n      imageUrl\n      id\n    }\n    trainer {\n      displayName\n      id\n    }\n    id\n  }\n}\n\nfragment EventReleasedRow_event on EventReleased {\n  comment\n  at {\n    iso8601\n  }\n  pokemon {\n    caughtAt {\n      iso8601\n    }\n    weight\n    height\n    species {\n      name\n      imageUrl\n      id\n    }\n    trainer {\n      displayName\n      id\n    }\n    id\n  }\n}\n",
-  "metadata": {
-    "connection": [
-      {
-        "count": null,
-        "cursor": null,
-        "direction": "forward",
-        "path": [
-          "viewer",
-          "events"
-        ]
-      }
-    ]
-  },
+  "text": "query FeedPageQuery {\n  viewer {\n    id\n    releaseEvents(first: 5) {\n      edges {\n        node {\n          id\n          at {\n            iso8601\n          }\n          typename: __typename\n          ...EventReleasedRow_event\n        }\n      }\n    }\n    caughtEvents(first: 5) {\n      edges {\n        node {\n          id\n          at {\n            iso8601\n          }\n          typename: __typename\n          ...EventCaughtRow_event\n        }\n      }\n    }\n  }\n}\n\nfragment EventReleasedRow_event on EventReleased {\n  comment\n  at {\n    iso8601\n  }\n  pokemon {\n    caughtAt {\n      iso8601\n    }\n    weight\n    height\n    species {\n      name\n      imageUrl\n      id\n    }\n    trainer {\n      displayName\n      id\n    }\n    id\n  }\n}\n\nfragment EventCaughtRow_event on EventCaught {\n  pokemon {\n    weight\n    height\n    caughtAt {\n      iso8601\n    }\n    species {\n      name\n      imageUrl\n      id\n    }\n    trainer {\n      displayName\n      id\n    }\n    id\n  }\n}\n",
+  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "FeedPageQuery",
@@ -266,11 +257,11 @@ return {
           v0,
           {
             "kind": "LinkedField",
-            "alias": "events",
-            "name": "__feed_events_connection",
-            "storageKey": null,
-            "args": null,
-            "concreteType": "EventConnection",
+            "alias": null,
+            "name": "releaseEvents",
+            "storageKey": "releaseEvents(first:5)",
+            "args": v1,
+            "concreteType": "EventReleasedConnection",
             "plural": false,
             "selections": [
               {
@@ -279,7 +270,7 @@ return {
                 "name": "edges",
                 "storageKey": null,
                 "args": null,
-                "concreteType": "EventEdge",
+                "concreteType": "EventReleasedEdge",
                 "plural": true,
                 "selections": [
                   {
@@ -288,22 +279,62 @@ return {
                     "name": "node",
                     "storageKey": null,
                     "args": null,
-                    "concreteType": null,
+                    "concreteType": "EventReleased",
                     "plural": false,
                     "selections": [
                       v0,
+                      v3,
+                      v4,
                       {
                         "kind": "FragmentSpread",
-                        "name": "EventRow_event",
+                        "name": "EventReleasedRow_event",
                         "args": null
-                      },
-                      v1
+                      }
                     ]
-                  },
-                  v2
+                  }
                 ]
-              },
-              v3
+              }
+            ]
+          },
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "caughtEvents",
+            "storageKey": "caughtEvents(first:5)",
+            "args": v1,
+            "concreteType": "EventCaughtConnection",
+            "plural": false,
+            "selections": [
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "edges",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "EventCaughtEdge",
+                "plural": true,
+                "selections": [
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "node",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "EventCaught",
+                    "plural": false,
+                    "selections": [
+                      v0,
+                      v3,
+                      v4,
+                      {
+                        "kind": "FragmentSpread",
+                        "name": "EventCaughtRow_event",
+                        "args": null
+                      }
+                    ]
+                  }
+                ]
+              }
             ]
           }
         ]
@@ -328,17 +359,10 @@ return {
           {
             "kind": "LinkedField",
             "alias": null,
-            "name": "events",
-            "storageKey": "events(first:5)",
-            "args": [
-              {
-                "kind": "Literal",
-                "name": "first",
-                "value": 5,
-                "type": "Int"
-              }
-            ],
-            "concreteType": "EventConnection",
+            "name": "releaseEvents",
+            "storageKey": "releaseEvents(first:5)",
+            "args": v1,
+            "concreteType": "EventReleasedConnection",
             "plural": false,
             "selections": [
               {
@@ -347,7 +371,7 @@ return {
                 "name": "edges",
                 "storageKey": null,
                 "args": null,
-                "concreteType": "EventEdge",
+                "concreteType": "EventReleasedEdge",
                 "plural": true,
                 "selections": [
                   {
@@ -356,104 +380,94 @@ return {
                     "name": "node",
                     "storageKey": null,
                     "args": null,
-                    "concreteType": null,
+                    "concreteType": "EventReleased",
                     "plural": false,
                     "selections": [
                       v0,
+                      v3,
+                      v4,
                       {
                         "kind": "ScalarField",
-                        "alias": "typename",
-                        "name": "__typename",
+                        "alias": null,
+                        "name": "comment",
                         "args": null,
                         "storageKey": null
                       },
                       {
                         "kind": "LinkedField",
                         "alias": null,
-                        "name": "at",
+                        "name": "pokemon",
                         "storageKey": null,
                         "args": null,
-                        "concreteType": "Datetime",
+                        "concreteType": "Pokemon",
                         "plural": false,
-                        "selections": v4
-                      },
-                      v1,
-                      {
-                        "kind": "InlineFragment",
-                        "type": "EventReleased",
                         "selections": [
-                          {
-                            "kind": "ScalarField",
-                            "alias": null,
-                            "name": "comment",
-                            "args": null,
-                            "storageKey": null
-                          },
-                          {
-                            "kind": "LinkedField",
-                            "alias": null,
-                            "name": "pokemon",
-                            "storageKey": null,
-                            "args": null,
-                            "concreteType": "Pokemon",
-                            "plural": false,
-                            "selections": [
-                              v5,
-                              v6,
-                              v7,
-                              v8,
-                              v9,
-                              v0
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "kind": "InlineFragment",
-                        "type": "EventCaught",
-                        "selections": [
-                          {
-                            "kind": "LinkedField",
-                            "alias": null,
-                            "name": "pokemon",
-                            "storageKey": null,
-                            "args": null,
-                            "concreteType": "Pokemon",
-                            "plural": false,
-                            "selections": [
-                              v6,
-                              v7,
-                              v5,
-                              v8,
-                              v9,
-                              v0
-                            ]
-                          }
+                          v5,
+                          v6,
+                          v7,
+                          v8,
+                          v9,
+                          v0
                         ]
                       }
                     ]
-                  },
-                  v2
+                  }
                 ]
-              },
-              v3
+              }
             ]
           },
           {
-            "kind": "LinkedHandle",
+            "kind": "LinkedField",
             "alias": null,
-            "name": "events",
-            "args": [
+            "name": "caughtEvents",
+            "storageKey": "caughtEvents(first:5)",
+            "args": v1,
+            "concreteType": "EventCaughtConnection",
+            "plural": false,
+            "selections": [
               {
-                "kind": "Literal",
-                "name": "first",
-                "value": 5,
-                "type": "Int"
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "edges",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "EventCaughtEdge",
+                "plural": true,
+                "selections": [
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "node",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "EventCaught",
+                    "plural": false,
+                    "selections": [
+                      v0,
+                      v3,
+                      v4,
+                      {
+                        "kind": "LinkedField",
+                        "alias": null,
+                        "name": "pokemon",
+                        "storageKey": null,
+                        "args": null,
+                        "concreteType": "Pokemon",
+                        "plural": false,
+                        "selections": [
+                          v6,
+                          v7,
+                          v5,
+                          v8,
+                          v9,
+                          v0
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
-            ],
-            "handle": "connection",
-            "key": "feed_events",
-            "filters": null
+            ]
           }
         ]
       }
@@ -461,5 +475,5 @@ return {
   }
 };
 })();
-(node/*: any*/).hash = '60052c3b4aa83d24d91f24c3f16fc8a4';
+(node/*: any*/).hash = 'b620704a2c565bf8311bb0806adbb84f';
 module.exports = node;

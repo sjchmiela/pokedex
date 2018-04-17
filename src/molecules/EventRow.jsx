@@ -2,15 +2,17 @@
 
 import moment from "moment";
 import * as React from "react";
+
+// STEP 16
+// Import graphql and createFragmentContainer from among
+// export of react-relay.
+
 import { withStyles } from "material-ui/styles";
 import ListItem from "material-ui/List/ListItem";
 import ListItemText from "material-ui/List/ListItemText";
-import { createFragmentContainer, graphql } from "react-relay";
 
 import EventCaughtRow from "../molecules/EventCaughtRow";
 import EventReleasedRow from "../molecules/EventReleasedRow";
-
-import EventRow_event from "./__generated__/EventRow_event";
 
 const styles = theme => ({
   container: {
@@ -32,25 +34,37 @@ const styles = theme => ({
   },
 });
 
+type EventType = {
+  typename: string,
+  at: {
+    iso8601: string,
+  },
+};
+
+// STEP 15
+// Notice that EventRow uses and requires certain fields
+// of the Event interface, but it doesn't specify any GraphQL fragment
+// that parent containers could use to include EventRow's fragment
+// in their query.
+//
+// Let's make EventRow a Relay fragment container.
+
+// // If you're using Flow
+// // STEP 19
+// // Relay watcher should automatically create an importable
+// // type definition for us. Import it from the __generated__
+// // directory and use as the type that props.event is expected to be.
+// // Once you do this, also fix the type required by renderConcreteEvent.
+// // Then you can also remove the obsolete EventType -- now the type
+// // is always up to date thanks to Relay watcher.
+
 type PropsType = {
-  event: EventRow_event,
+  event: EventType,
   classes: { container: string, timeLabel: string, concreteEvent: string },
 };
 
 class EventRow extends React.Component<PropsType> {
-  interval: ?number;
-
-  componentDidMount() {
-    this.interval = setInterval(() => this.forceUpdate(), 5000);
-  }
-
-  componentWillUnmount() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
-  }
-
-  renderConcreteEvent = event => {
+  renderConcreteEvent = (event: EventType) => {
     switch (event.typename) {
       case "EventCaught":
         return <EventCaughtRow event={event} />;
@@ -74,16 +88,16 @@ class EventRow extends React.Component<PropsType> {
   }
 }
 
-export default createFragmentContainer(withStyles(styles)(EventRow), {
-  event: graphql`
-    fragment EventRow_event on Event {
-      typename: __typename
-      id
-      at {
-        iso8601
-      }
-      ...EventCaughtRow_event
-      ...EventReleasedRow_event
-    }
-  `,
-});
+// STEP 17
+// Instead of exporting, assign the exported value to some constant.
+export default withStyles(styles)(EventRow);
+
+// STEP 18
+// Define and export by default a newly created fragment container.
+// createFragmentContainer should fetch a single fragment named eg. event,
+// and it should define this fragment on Event type.
+// The funny thing is, you can just copy the contents of
+// the query defined on `node` from FeedRow -- that's exactly what
+// EventRow needs and that's why we're moving the fragment
+// here -- so that data requirements are colocated with the component
+// using them.

@@ -1,7 +1,4 @@
 import { Environment, Network, RecordSource, Store } from "relay-runtime";
-import * as AbsintheSocket from "@absinthe/socket";
-import { createSubscriber } from "@absinthe/socket-relay";
-import { Socket as PhoenixSocket } from "phoenix";
 
 export const tokenKey = "token";
 
@@ -22,13 +19,8 @@ const fetchQueryFactory = (customHeaders = {}) => (operation, variables) =>
     return response.json();
   });
 
-const absintheSocket = AbsintheSocket.create(new PhoenixSocket("/socket"));
-
 export default token => {
   const customHeaders = token ? { Authorization: `Bearer ${token}` } : null;
-  const network = Network.create(
-    fetchQueryFactory(customHeaders),
-    createSubscriber(absintheSocket),
-  );
+  const network = Network.create(fetchQueryFactory(customHeaders));
   return new Environment({ network, store });
 };

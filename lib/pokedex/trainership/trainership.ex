@@ -6,6 +6,28 @@ defmodule Pokedex.Trainership do
   alias Pokedex.Trainership.{Trainer, Pokemon}
   alias Pokedex.Pokemons.Nest
 
+  def get_caught_events() do
+    from(p in Pokemon, order_by: [asc: :inserted_at])
+    |> Repo.all()
+    |> Enum.map(fn pokemon -> %{pokemon: pokemon, type: :caught, at: pokemon.inserted_at} end)
+  end
+
+  def get_released_events() do
+    from(p in Pokemon, order_by: [asc: :released_at], where: not is_nil(p.released_at))
+    |> Repo.all()
+    |> Enum.map(fn pokemon -> %{pokemon: pokemon, type: :released, at: pokemon.released_at} end)
+  end
+
+  # STEP 8
+  # Define a get_events/0 function that will
+  # concatenate the caught and released events
+  # and sort them in the right order based on event.at.
+  #
+  # Note that we cannot use Enum.sort_by/2 to sort
+  # events by .at property, we have to use Enum.sort/2
+  # and... a certain function from a certain datetime module.
+  # Protip: dates are returned as NaiveDateTime.
+
   def create_trainer(attrs \\ %{}) do
     multi =
       Multi.new()

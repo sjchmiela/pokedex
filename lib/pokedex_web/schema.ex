@@ -39,20 +39,4 @@ defmodule PokedexWeb.Schema do
     import_fields(:accounts_mutations)
     import_fields(:trainership_mutations)
   end
-
-  subscription do
-    import_fields(:traninership_subscriptions)
-  end
-
-  def plugins do
-    [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
-  end
-
-  def context(ctx) do
-    loader =
-      Dataloader.new()
-      |> Dataloader.add_source(:repo, Dataloader.Ecto.new(Pokedex.Repo))
-
-    Map.put(ctx, :loader, loader)
-  end
 end

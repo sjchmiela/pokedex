@@ -1,6 +1,5 @@
 defmodule PokedexWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :pokedex
-  use Absinthe.Phoenix.Endpoint
 
   socket("/socket", PokedexWeb.UserSocket)
 

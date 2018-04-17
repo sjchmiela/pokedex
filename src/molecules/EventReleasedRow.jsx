@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import ListItem from "material-ui/List/ListItem";
 import ListItemText from "material-ui/List/ListItemText";
 import { createFragmentContainer, graphql } from "react-relay";
 import PokemonImage from "../atoms/PokemonImage";
@@ -28,7 +27,12 @@ class EventReleasedRow extends React.Component<PropsType> {
     ) : null;
 
   render() {
-    const { event: { pokemon: { trainer }, pokemon } } = this.props;
+    const {
+      event: {
+        pokemon: { trainer },
+        pokemon,
+      },
+    } = this.props;
     return (
       // $FlowFixMe <3
       <React.Fragment>

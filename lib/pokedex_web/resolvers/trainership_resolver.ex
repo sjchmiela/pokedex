@@ -2,9 +2,23 @@ defmodule PokedexWeb.Resolvers.TrainershipResolver do
   import PokedexWeb.Resolvers.Helpers
   alias Pokedex.Repo
   alias Pokedex.Trainership
-  alias Trainership.{Pokemon}
+  alias Trainership.{Pokemon, Trainer}
+  alias Absinthe.Relay.Connection
   alias Pokedex.Accounts.User
   import Ecto.Query, only: [from: 2]
+
+  def trainers_user(%Trainer{user: %Ecto.Association.NotLoaded{}} = trainer, args, info),
+    do: trainer |> Repo.preload(:user) |> trainers_user(args, info)
+
+  def trainers_user(%Trainer{user: user}, _args, _info), do: {:ok, user}
+
+  def trainers_pokemons(%Trainer{pokemons: %Ecto.Association.NotLoaded{}} = trainer, args, _info),
+    do:
+      from(p in Pokemon, where: p.trainer_id == ^trainer.id, order_by: [desc: :inserted_at])
+      |> Connection.from_query(&Repo.all/1, args)
+
+  def trainers_pokemons(%Trainer{pokemons: pokemons}, args, _info),
+    do: Connection.from_list(pokemons, args)
 
   def pokemon_species(%Pokemon{species: %Ecto.Association.NotLoaded{}} = pokemon, args, info),
     do: pokemon |> Repo.preload(:species) |> pokemon_species(args, info)
@@ -36,20 +50,43 @@ defmodule PokedexWeb.Resolvers.TrainershipResolver do
     end
   end
 
-  def list_events(args, _) do
-    caught =
-      from(p in Pokemon, order_by: [desc: :inserted_at])
-      |> Repo.all()
-      |> Enum.map(fn pokemon -> %{pokemon: pokemon, type: :caught, at: pokemon.inserted_at} end)
-
-    released =
-      from(p in Pokemon, order_by: [desc: :inserted_at], where: not is_nil(p.released_at))
-      |> Repo.all()
-      |> Enum.map(fn pokemon -> %{pokemon: pokemon, type: :released, at: pokemon.released_at} end)
-
-    Enum.concat(caught, released)
-    |> Enum.sort(fn a, b -> if NaiveDateTime.compare(a.at, b.at) != :gt, do: true, else: false end)
-    |> Enum.reverse()
+  def list_caught_events(args, _) do
+    Trainership.get_caught_events()
     |> Absinthe.Relay.Connection.from_list(args)
   end
+
+  def list_released_events(args, _) do
+    Trainership.get_released_events()
+    |> Absinthe.Relay.Connection.from_list(args)
+  end
+
+  # STEP 9
+  # Let's implement the resolve function!
+  # Create a function matching name and arity of the function
+  # you've pointed resolve to in previous step.
+  #
+  # To fetch the events list you can use Trainership.get_events/0,
+  # you've created in the previous step.
+
+  # STEP 10
+  # Open up GraphiQL and try to fetch 5 last events with the newly
+  # created events connection field. Query for __typename field
+  # to see concrete types hidden behind the interface.
+  # Ensure that by default you can only query the fields that are
+  # defined by Event.
+  #
+  # Note that to access a specific type implementing the interface
+  # you can use inline fragments:
+  #
+  # ...
+  #   node {
+  #     # node is of type Edge
+  #     ... on EventReleased {
+  #       # We can spread a conditional fragment
+  #       # on any of the implementations
+  #       # it will only resolve if the node is of type EventReleased.
+  #       comment
+  #     }
+  #   }
+  # ...
 end
