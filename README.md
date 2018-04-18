@@ -12,7 +12,7 @@ in all the files and follow the order.
 
 ```elixir
 {:absinthe_relay, "~> 1.4"},
-{:absinthe_phoenix, "~> 1.4"},
+{:absinthe, "~> 1.4"},
 ```
 
 </details>
