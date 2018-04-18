@@ -5,8 +5,8 @@
 ### Dockerized way (recommended)
 
 ```sh
-docker-compose run pheonix mix deps.get
-docker-compose run pheonix yarn
+docker-compose run phoenix mix deps.get
+docker-compose run phoenix yarn
 docker-compose up
 ```
 
