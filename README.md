@@ -184,7 +184,12 @@ class SpeciesList extends React.Component<PropsType> {
 <details>
   <summary>Step 14</summary>
 
-```javascript
+```graphql
+{
+  speciesArray {
+    ...SpeciesList_species
+  }
+}
 fragment SpeciesList_species on Species {
   name
 }
