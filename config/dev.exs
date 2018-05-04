@@ -11,7 +11,10 @@ config :pokedex, PokedexWeb.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: [yarn: ["run", "webpack-watch"], yarn: ["run", "relay-watch"]]
+  watchers: [
+    yarn: ["run", "webpack-watch"],
+    # yarn: ["run", "relay-watch"]
+  ]
 
 # ## SSL Support
 #

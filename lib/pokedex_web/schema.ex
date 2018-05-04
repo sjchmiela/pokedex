@@ -26,9 +26,12 @@
 # STEP 8
 # Define object type `species`. Add fields for all the attributes
 # with correspoding types with no resolver (which means default resolver will be used).
-# Find the new type in the GraphiQL docs (after refresh).
 # Docs:
 # * https://hexdocs.pm/absinthe/Absinthe.Schema.Notation.html#object/3
+#
+# Note that species also defines an ID field. Do not forget to add
+# the :id field of type :id. Species will be an object type and GraphQL expects
+# objects to implement the ID field.
 
 # STEP 10
 # Add new root level field `species_array`, which is of type: list of species.

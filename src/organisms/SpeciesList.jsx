@@ -71,6 +71,9 @@ export default class SpeciesList extends React.Component<PropsType> {
 // "fragment is not used" complains.
 // Generate `schema.json` that is used by (Relay Compiler)[https://facebook.github.io/relay/docs/en/graphql-in-relay.html#relay-compiler]
 // to staticly check and compile queries from JavaScript code. You can do this by executing `mix graphql.schema`.
+//
+// Also, uncomment the `yarn relay-watch` entry from config/dev.exs so that
+// the Relay watcher picks up our queries and transforms them into proper .graphql.js files.
 
 // STEP 15
 // Create a fragment container using `createFragmentContainer`. The query should consist of a fragment named
