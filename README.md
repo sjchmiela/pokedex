@@ -79,8 +79,8 @@ connection(node_type: :species)
 
 ```elixir
 connection field :species, node_type: :species do
-  resolve(fn args, _ ->
-    {:ok, pokemons} = PokemonsResolver.list_species()
+  resolve(fn args, info ->
+    {:ok, pokemons} = PokemonsResolver.list_species(args, info)
     Absinthe.Relay.Connection.from_list(pokemons, args)
   end)
 end
