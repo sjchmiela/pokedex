@@ -62,10 +62,14 @@ This workshop has been created by two friends for a workshop session during Elix
     </tr>
     <tr>
       <td>
-        <img src="https://sjchmiela.github.io/pokedex/swmansion.png" height="34" />
+        <a href="https://swmansion.com/">
+          <img src="https://sjchmiela.github.io/pokedex/swmansion.png" alt="Software Mansion" width="250" />
+        </a>
       </td>
       <td>
-        <img src="https://sjchmiela.github.io/pokedex/avsystem.png" height="34" />
+        <a href="https://www.avsystem.com">
+          <img src="https://sjchmiela.github.io/pokedex/avsystem.png" width="250" />
+        </a>
       </td>
     </tr>
   </tbody>
