@@ -50,26 +50,30 @@ This workshop has been created by two friends for a workshop session during Elix
   </thead>
   <tbody>
     <tr>
-      <td>
+      <td style="text-align: center">
         <a href="https://twitter.com/sjchmiela/">
-          <img src="http://s3.amazonaws.com/erlang-conferences-production/media/files/000/000/753/thumbnail/1151041.jpg?1510051715" alt="Stanisław Chmiela" />
+          <img src="http://s3.amazonaws.com/erlang-conferences-production/media/files/000/000/753/thumbnail/1151041.jpg?1510051715" width="250" alt="Stanisław Chmiela" />
         </a>
       </td>
-      <td>
+      <td style="text-align: center">
         <a href="https://github.com/ukasiu/">
-          <img src="http://s3.amazonaws.com/erlang-conferences-production/media/files/000/000/757/thumbnail/lukasz_gurdek.png?1510053797" alt="Stanisław Chmiela" />
+          <img src="http://s3.amazonaws.com/erlang-conferences-production/media/files/000/000/757/thumbnail/lukasz_gurdek.png?1510053797" width="250" alt="Stanisław Chmiela" />
         </a>
     </tr>
     <tr>
       <td>
-        <object data="https://sjchmiela.github.io/pokedex/swmansion.svg" type="image/svg+xml" height="52">
-          <img src="https://sjchmiela.github.io/pokedex/swmansion.png" />
-        </object>
+        <div style="width: 250px">
+          <object data="https://sjchmiela.github.io/pokedex/swmansion.svg" type="image/svg+xml" width="250">
+            <img src="https://sjchmiela.github.io/pokedex/swmansion.png" />
+          </object>
+        </div>
       </td>
       <td>
-        <object data="https://sjchmiela.github.io/pokedex/avsystem.svg" type="image/svg+xml" height="52">
-          <img src="https://sjchmiela.github.io/pokedex/avsystem.png" />
-        </object>
+        <div style="width: 250px">
+          <object data="https://sjchmiela.github.io/pokedex/avsystem.svg" type="image/svg+xml">
+            <img src="https://sjchmiela.github.io/pokedex/avsystem.png" />
+          </object>
+        </div>
       </td>
     </tr>
   </tbody>
