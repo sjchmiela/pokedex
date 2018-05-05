@@ -1,4 +1,0 @@
-flow-typed
-priv/static
-schema.json
-*.graphql.js
