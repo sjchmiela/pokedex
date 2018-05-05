@@ -62,18 +62,10 @@ This workshop has been created by two friends for a workshop session during Elix
     </tr>
     <tr>
       <td>
-        <div style="width: 250px">
-          <object data="https://sjchmiela.github.io/pokedex/swmansion.svg" type="image/svg+xml" width="250">
-            <img src="https://sjchmiela.github.io/pokedex/swmansion.png" />
-          </object>
-        </div>
+        <img src="https://sjchmiela.github.io/pokedex/swmansion.png" height="34" />
       </td>
       <td>
-        <div style="width: 250px">
-          <object data="https://sjchmiela.github.io/pokedex/avsystem.svg" type="image/svg+xml">
-            <img src="https://sjchmiela.github.io/pokedex/avsystem.png" />
-          </object>
-        </div>
+        <img src="https://sjchmiela.github.io/pokedex/avsystem.png" height="34" />
       </td>
     </tr>
   </tbody>
